@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package tutorial.grpc.books.v1;
+option go_package = "books";
+
+// Book definition
+
+message Book {
+  string id     = 1;
+  string author = 2;
+  string title  = 3;
+  string isbn   = 4;
+
+}
