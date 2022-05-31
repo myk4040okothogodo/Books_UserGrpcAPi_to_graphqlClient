@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/arangodb/go-driver v1.3.2
 	github.com/myk4040okothogodo/tutorial/db v0.0.0-00010101000000-000000000000
-	github.com/myk4040okothogodo/tutorial/gen/go/proto/holders v0.0.0-00010101000000-000000000000
+	github.com/myk4040okothogodo/tutorial/gen/go/proto/holders latest
 	google.golang.org/grpc v1.46.2
 )
 
