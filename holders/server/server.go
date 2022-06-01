@@ -43,7 +43,7 @@ func (s *Server) Run() {
     if port == "" {
         port = defaultPort
     }
-    listener, err := net.listen("tcp", fmt.Sprintf("0.0.0.0: %s", port))
+    listener, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0: %s", port))
     if err != nil {
         log.Print("net.Listen failed")
         return
@@ -60,7 +60,7 @@ func (s *Server) Run() {
 
 func (s *Server) ListHolders(ctx context.Context, in *holdersv1.ListHoldersRequest)(*holdersv1.ListHoldersResponse, error){
     if in == nil {
-        return nil, fmt.Errof("Request is empty")
+        return nil, fmt.Errorf("Request is empty")
     }
 
     cursor, err := s.database.Query(ctx, db.ListRecords(s.holdersCollection.Name()), nil)
@@ -71,7 +71,7 @@ func (s *Server) ListHolders(ctx context.Context, in *holdersv1.ListHoldersReque
     defer cursor.Close()
     allHolders := []*holdersv1.Holder{}
     for {
-        holder := new(holdersv1.Holders)
+        holder := new(holdersv1.Holder)
         var meta driver.DocumentMeta
         meta, err := cursor.ReadDocument(ctx, holder)
         if driver.IsNoMoreDocuments(err) {
@@ -120,13 +120,13 @@ func (s *Server) GetHolderByBookId(ctx context.Context, in *holdersv1.GetHolderB
     query := fmt.Sprintf(queryHolderByBookId, holdersCollectionName)
     bindVars := map[string]interface{}{"bookId": in.Id}
 
-    cursor, err := s.database.Query(ctx, query, bindvars)
+    cursor, err := s.database.Query(ctx, query, bindVars)
     if err != nil {
         return nil, fmt.Errorf("Failed to iterate over holder documents with query '%s': %s", queryHolderByBookId, err)
     }
     defer cursor.Close()
 
-    h := new(holdersV1.Holder)
+    h := new(holdersv1.Holder)
     meta, err := cursor.ReadDocument(ctx, h)
     if driver.IsNoMoreDocuments(err){
         return nil, fmt.Errorf("Holder that held book with id %s not found: %s", in.Id, err)
@@ -139,7 +139,7 @@ func (s *Server) GetHolderByBookId(ctx context.Context, in *holdersv1.GetHolderB
 
 func (s *Server) AddHolder(ctx  context.Context, in *holdersv1.AddHolderRequest) (*holdersv1.AddHolderResponse, error) {
     if in == nil || in.Holder == nil {
-        return nil, fmt.Errof("Book is not provided")
+        return nil, fmt.Errorf("Book is not provided")
     }
 
     meta, err := s.holdersCollection.CreateDocument(ctx, in.Holder)
@@ -157,7 +157,7 @@ func (s *Server) UpdateHolder(ctx context.Context, in *holdersv1.UpdateHolderReq
           return nil, fmt.Errorf("Existing holder is provided")
     }
 
-    _, err := s.holderCollection.ReplaceDocument(ctx, in.Holder.Id, in.Holder)
+    _, err := s.holdersCollection.ReplaceDocument(ctx, in.Holder.Id, in.Holder)
     if err != nil {
         return nil, fmt.Errorf("Failed to update with id %s", in.Holder.Id, err)
     }

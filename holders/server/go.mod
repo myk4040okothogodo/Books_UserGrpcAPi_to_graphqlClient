@@ -4,8 +4,8 @@ go 1.18
 
 require (
 	github.com/arangodb/go-driver v1.3.2
-	github.com/myk4040okothogodo/tutorial/db v0.0.0-00010101000000-000000000000
-	github.com/myk4040okothogodo/tutorial/gen/go/proto/holders latest
+	github.com/myk4040okothogodo/tutorial/db v0.0.0-20220531135118-439fecdc0f2c
+	github.com/myk4040okothogodo/tutorial/gen/go/proto/holders v0.0.0-20220531135118-439fecdc0f2c
 	google.golang.org/grpc v1.46.2
 )
 
@@ -19,7 +19,3 @@ require (
 	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 )
-
-replace github.com/myk4040okothogodo/tutorial/gen/go/proto/holders => ../../gen/go/proto/holders
-
-replace github.com/myk4040okothogodo/tutorial/db => ../../db
