@@ -6,8 +6,9 @@ import (
     "log"
     "net"
     "os"
-    "tutorial/db"
-    booksv1 "tutorial/gen/go/proto/books"
+    "github.com/myk4040okothogodo/tutorial/db"
+    booksv1 "github.com/myk4040okothogodo/tutorial/gen/go/proto/books"
+    "github.com/arangodb/go-driver"
     "google.golang.org/grpc"
     "google.golang.org/grpc/reflection"
 )

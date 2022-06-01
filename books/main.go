@@ -7,14 +7,14 @@ import (
     "os/signal"
     "syscall"
     "time"
-    "tutorial/books/server"
-    "tutorial/db"
+    "github.com/myk4040okothogodo/tutorial/books/server"
+    "github.com/myk4040okothogodo/tutorial/db"
 )
 
 
 func main(){
   ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
-  defer cancelfn()
+  defer cancelFn()
 
   database, err := db.Connect(ctx, db.GetDbConfig())
   if err != nil {

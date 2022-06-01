@@ -23,7 +23,7 @@ func parseEnvVars(key string) string {
 
 
 const (
-    DbHost     = "http+tcp://127.0.0.1"
+    DbHost     = "http://127.0.0.1"
     DbPort     = "8529"
     DbUserName = "root@booksholders_db"
     DbPassword = "mykokothe"
