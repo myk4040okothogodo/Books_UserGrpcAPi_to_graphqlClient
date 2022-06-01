@@ -43,7 +43,7 @@ func NewServer(ctx context.Context, database driver.Database)(*Server, error) {
 func (s *Server) Run() {
     port := os.Getenv("APP_PORT")
     if port == "" {
-        ports = defaultPort
+        port = defaultPort
     }
 
     listener,err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%s", port))
@@ -57,10 +57,10 @@ func (s *Server) Run() {
     booksv1.RegisterBooksAPIServer(grpcServer, s)
     reflection.Register(grpcServer)
 
-    log.printf("Starting Books server on port %s", port)
+    log.Printf("Starting Books server on port %s", port)
 
     go func() {
-        grpcServer.Server(listener)
+        grpcServer.Serve(listener)
     }()
 }
 
@@ -135,7 +135,7 @@ func (s *Server) GetBooks(ctx context.Context, in *booksv1.GetBooksRequest) (*bo
     books := []*booksv1.Book{}
 
     for {
-        book := new(bookv1.Book)
+        book := new(booksv1.Book)
         meta, err := cursor.ReadDocument(ctx, book)
         if driver.IsNoMoreDocuments(err) {
             break
@@ -162,14 +162,14 @@ func (s *Server) GetBookByISBN(ctx context.Context, in *booksv1.GetBookByISBNReq
     query := fmt.Sprintf(queryBookByISBN, booksCollectionName)
     bindVars := map[string]interface{}{"isbn": in.Isbn}
 
-    cursor, err := s.database.Query(ctx, query, bindvars)
+    cursor, err := s.database.Query(ctx, query, bindVars)
     if err != nil {
         return nil, fmt.Errorf("Failed to iterate over book documents with query '%s': %s", queryBookByISBN, err)
     }
     defer cursor.Close()
 
     b := new(booksv1.Book)
-    meta, err := cursor.ReadDocuments(ctx, b)
+    meta, err := cursor.ReadDocument(ctx, b)
     if driver.IsNoMoreDocuments(err){
         return nil, fmt.Errorf("Book with ISBN '%s' not found: %s", in.Isbn, err)
     } else if err != nil {
@@ -177,7 +177,7 @@ func (s *Server) GetBookByISBN(ctx context.Context, in *booksv1.GetBookByISBNReq
     }
     b.Id = meta.Key
 
-    return &booksV1.GetBookByISBNResponse{Book: b}, nil
+    return &booksv1.GetBookByISBNResponse{Book: b}, nil
 }
 
 func (s *Server) AddBook(ctx context.Context, in *booksv1.AddBookRequest)(*booksv1.AddBookResponse, error){
@@ -201,7 +201,7 @@ func (s *Server) DeleteBook(ctx context.Context, in *booksv1.DeleteBookRequest)(
 
     _, err := s.booksCollection.RemoveDocument(ctx, in.Id)
     if err != nil {
-        return nil, fmt.Error("Failed to remove existing book: %s", err)
+        return nil, fmt.Errorf("Failed to remove existing book: %s", err)
     }
 
     return &booksv1.DeleteBookResponse{}, nil
